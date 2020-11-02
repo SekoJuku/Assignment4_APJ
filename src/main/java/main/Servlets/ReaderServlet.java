@@ -9,15 +9,7 @@ public class ReaderServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DBcontroller DB = new DBcontroller();
 //        Update reader
-        if(request.getParameter("update_reader") != null){
-            int id = Integer.parseInt(request.getParameter("update_reader_id"));
-            String name = request.getParameter("update_reader_name");
-            String address = request.getParameter("update_reader_address");
-            String phone = request.getParameter("update_reader_phone");
-            Reader reader_to_update = new Reader(id, name, address, phone);
-            DB.updateReader(reader_to_update);
-            response.sendRedirect("readers.jsp");
-        }
+
 //        Add reader
         if(request.getParameter("add_reader") != null){
             int id = Integer.parseInt(request.getParameter("add_reader_id"));

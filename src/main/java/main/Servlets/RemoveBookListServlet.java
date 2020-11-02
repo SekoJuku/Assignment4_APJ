@@ -9,17 +9,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "RemoveBookServlet",urlPatterns = "/RemoveBookServlet")
-public class RemoveBookServlet extends HttpServlet {
+@WebServlet(name = "RemoveBookListServlet",urlPatterns = "/RemoveBookListServlet")
+public class RemoveBookListServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        DBcontroller DB = new DBcontroller();
-        int id = Integer.parseInt(request.getParameter("book_id_delete"));
-        System.out.println(id);
-        DB.removeBook(id);
-        response.sendRedirect("books.jsp");
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        DBcontroller DB = new DBcontroller();
+        int id = Integer.parseInt(request.getParameter("removeBookId"));
+        DB.removeBookFromList(id);
+        response.sendRedirect("main.jsp");
     }
 }

@@ -1,4 +1,4 @@
-package main.controller;
+package main.controllers;
 
 import main.models.Book;
 import main.DB;
@@ -23,12 +23,11 @@ public class DBcontroller extends DB {
             ResultSet resultSet = preparedStatement.executeQuery();
             int count = 0;
             while(resultSet.next()){
-
+                //public Book(int book_id, String book_isbn, String book_name, int book_pages, String book_author, String book_url_image, int book_quantity)
                 Book book = new Book(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3), resultSet.getInt(4), resultSet.getString(5),resultSet.getString(6), resultSet.getInt(7));
                 all_books.add(book);
                 count ++;
             }
-            System.out.println("Books count "+count);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -45,18 +44,16 @@ public class DBcontroller extends DB {
             preparedStatement.setString(5, book.getUrl_image());
             preparedStatement.setInt(6, book.getQuantity());
             preparedStatement.execute();
-            System.out.println("Book added!");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
-    public void removeBook(int b_id){
+    public void removeBook(int book_id){
         try {
             PreparedStatement preparedStatement = myConnection.
                     prepareStatement("delete from books where book_id=?");
-            preparedStatement.setInt(1, b_id);
+            preparedStatement.setInt(1, book_id);
             preparedStatement.execute();
-            System.out.println("Book removed!");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -74,7 +71,6 @@ public class DBcontroller extends DB {
             preparedStatement.setInt(5, book.getQuantity());
             preparedStatement.setInt(6, book.getId());
             preparedStatement.execute();
-            System.out.println("Updated book with ID: "+book.getId());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -112,7 +108,7 @@ public class DBcontroller extends DB {
         }
         return false;
     }
-//
+    //
     public ArrayList<Reader> getAllReaders(){
         ArrayList<Reader> all_readers = new ArrayList<>();
         try {
@@ -124,7 +120,6 @@ public class DBcontroller extends DB {
                 all_readers.add(reader);
                 count ++;
             }
-            System.out.println("Readers count "+count);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -138,7 +133,6 @@ public class DBcontroller extends DB {
             preparedStatement.setString(2, reader.getAddress());
             preparedStatement.setString(3, reader.getPhone());
             preparedStatement.execute();
-            System.out.println("Reader added!");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -151,7 +145,6 @@ public class DBcontroller extends DB {
             Reader reader = null;
             while(resultSet.next()){
                 reader = new Reader(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4));
-                System.out.printf("Reader with ID: "+reader.getId()+" found");
                 return reader;
             }
         } catch (SQLException throwables) {
@@ -159,18 +152,18 @@ public class DBcontroller extends DB {
         }
         return null;
     }
-    public String removeReader(int r_id){
-        if(getReaderBookList(r_id).size() == 0){
+    public String removeReader(int reader_id){
+        if(getReaderBookList(reader_id).size() == 0){
             try {
                 PreparedStatement preparedStatement = myConnection.prepareStatement("delete from readers where reader_id=?");
-                preparedStatement.setInt(1, r_id);
+                preparedStatement.setInt(1, reader_id);
                 preparedStatement.execute();
-                return "Deleted user with ID: "+r_id;
+                return "Deleted reader with ID: "+reader_id;
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
         }
-        return "User has not returned books, please first return books.";
+        return "User didn't return books, please first return books.";
     }
     public void updateReader(Reader reader){
         try {
@@ -183,7 +176,6 @@ public class DBcontroller extends DB {
             preparedStatement.setString(3, reader.getPhone());
             preparedStatement.setInt(4, reader.getId());
             preparedStatement.execute();
-            System.out.println("Updated reader with ID: "+reader.getId());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -207,17 +199,16 @@ public class DBcontroller extends DB {
         }
         return false;
     }
-//
-    public Map<Integer, String> getReaderBookList(int r_id){
+    //
+    public Map<Integer, String> getReaderBookList(int reader_id){
         Map<Integer, String> books = new HashMap<>();
         try {
             PreparedStatement preparedStatement = myConnection.prepareStatement("select reader_booklist.id, reader_booklist.book_id, books.book_name from reader_booklist inner join books on reader_booklist.book_id=books.book_id where reader_booklist.reader_id=?");
-            preparedStatement.setInt(1, r_id);
+            preparedStatement.setInt(1, reader_id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
                 int id = resultSet.getInt(1);
                 String book = "ID: "+resultSet.getInt(2)+"| NAME: "+resultSet.getString(3);
-                System.out.println(book);
                 books.put(id, book);
             }
             return books;
@@ -258,7 +249,6 @@ public class DBcontroller extends DB {
                 preparedStatement2.setInt(1, copies);
                 preparedStatement2.setInt(2, book_id);
                 preparedStatement2.execute();
-                System.out.println("Removed book from list, ID: "+id);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -275,7 +265,6 @@ public class DBcontroller extends DB {
                 available_books.add(book);
                 count ++;
             }
-            System.out.println("Available books count "+count);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
