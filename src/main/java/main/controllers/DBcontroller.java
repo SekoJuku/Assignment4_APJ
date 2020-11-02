@@ -14,28 +14,16 @@ import java.util.Map;
 import java.util.Stack;
 
 public class DBcontroller extends DB {
-    private Connection myConnection = getConnection();
 
-    public ArrayList<Book> getAllBooks(){
-        ArrayList<Book> all_books = new ArrayList<>();
+    DB db = new DB();
+
+    private Connection myConnection = db.getConnection();
+
+
+    public void addBook(Book book) {
+        PreparedStatement preparedStatement = null;
         try {
-            PreparedStatement preparedStatement = myConnection.prepareStatement("select * from books");
-            ResultSet resultSet = preparedStatement.executeQuery();
-            int count = 0;
-            while(resultSet.next()){
-                //public Book(int book_id, String book_isbn, String book_name, int book_pages, String book_author, String book_url_image, int book_quantity)
-                Book book = new Book(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3), resultSet.getInt(4), resultSet.getString(5),resultSet.getString(6), resultSet.getInt(7));
-                all_books.add(book);
-                count ++;
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return all_books;
-    }
-    public void addBook(Book book){
-        try {
-            PreparedStatement preparedStatement = myConnection.
+            preparedStatement = myConnection.
                     prepareStatement("insert into books values(null, ?, ?, ?, ?, ?, ?)");
             preparedStatement.setString(1, book.getIsbn());
             preparedStatement.setString(2, book.getName());
@@ -48,9 +36,10 @@ public class DBcontroller extends DB {
             throwables.printStackTrace();
         }
     }
-    public void removeBook(int book_id){
+    public void removeBook(int book_id) {
+        PreparedStatement preparedStatement = null;
         try {
-            PreparedStatement preparedStatement = myConnection.
+            preparedStatement = myConnection.
                     prepareStatement("delete from books where book_id=?");
             preparedStatement.setInt(1, book_id);
             preparedStatement.execute();
@@ -58,9 +47,10 @@ public class DBcontroller extends DB {
             throwables.printStackTrace();
         }
     }
-    public void updateBook(Book book){
+    public void updateBook(Book book) {
+        PreparedStatement preparedStatement = null;
         try {
-            PreparedStatement preparedStatement = myConnection
+            preparedStatement = myConnection
                     .prepareStatement("update books " +
                             "set book_name=?, book_author=?, book_image_url=?, book_pages=?, book_quantity=? " +
                             "where book_id=?");
@@ -75,9 +65,10 @@ public class DBcontroller extends DB {
             throwables.printStackTrace();
         }
     }
-    public int getCopiesOfBook(int book_id){
+    public int getCopiesOfBook(int book_id) {
+        PreparedStatement preparedStatement = null;
         try {
-            PreparedStatement preparedStatement = myConnection.prepareStatement("select book_quantity from books where book_id=?");
+            preparedStatement = myConnection.prepareStatement("select book_quantity from books where book_id=?");
             preparedStatement.setInt(1, book_id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
@@ -89,9 +80,10 @@ public class DBcontroller extends DB {
         }
         return 0;
     }
-    public boolean searchByISBN(String isbn){
+    public boolean searchByISBN(String isbn) {
+        PreparedStatement preparedStatement = null;
         try{
-            PreparedStatement preparedStatement = myConnection.prepareStatement("select * from books where book_isbn=?");
+            preparedStatement = myConnection.prepareStatement("select * from books where book_isbn=?");
             preparedStatement.setString(1, isbn);
             ResultSet resultSet = preparedStatement.executeQuery();
             int count = 0;
@@ -109,10 +101,11 @@ public class DBcontroller extends DB {
         return false;
     }
     //
-    public ArrayList<Reader> getAllReaders(){
+    public ArrayList<Reader> getAllReaders() {
+        PreparedStatement preparedStatement = null;
         ArrayList<Reader> all_readers = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = myConnection.prepareStatement("select * from readers");
+            preparedStatement = myConnection.prepareStatement("select * from readers");
             ResultSet resultSet = preparedStatement.executeQuery();
             int count = 0;
             while(resultSet.next()){
@@ -125,9 +118,10 @@ public class DBcontroller extends DB {
         }
         return all_readers;
     }
-    public void addReader(Reader reader){
+    public void addReader(Reader reader) {
+        PreparedStatement preparedStatement = null;
         try {
-            PreparedStatement preparedStatement = myConnection.
+            preparedStatement = myConnection.
                     prepareStatement("insert into readers values(null, ?, ?, ?)");
             preparedStatement.setString(1, reader.getName());
             preparedStatement.setString(2, reader.getAddress());
@@ -137,9 +131,10 @@ public class DBcontroller extends DB {
             throwables.printStackTrace();
         }
     }
-    public Reader getReader(int id){
+    public Reader getReader(int id) {
+        PreparedStatement preparedStatement = null;
         try{
-            PreparedStatement preparedStatement = myConnection.prepareStatement("select * from readers where reader_id=?");
+            preparedStatement = myConnection.prepareStatement("select * from readers where reader_id=?");
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             Reader reader = null;
@@ -152,10 +147,11 @@ public class DBcontroller extends DB {
         }
         return null;
     }
-    public String removeReader(int reader_id){
+    public String removeReader(int reader_id) {
+        PreparedStatement preparedStatement = null;
         if(getReaderBookList(reader_id).size() == 0){
             try {
-                PreparedStatement preparedStatement = myConnection.prepareStatement("delete from readers where reader_id=?");
+                preparedStatement = myConnection.prepareStatement("delete from readers where reader_id=?");
                 preparedStatement.setInt(1, reader_id);
                 preparedStatement.execute();
                 return "Deleted reader with ID: "+reader_id;
@@ -165,9 +161,10 @@ public class DBcontroller extends DB {
         }
         return "User didn't return books, please first return books.";
     }
-    public void updateReader(Reader reader){
+    public void updateReader(Reader reader) {
+        PreparedStatement preparedStatement = null;
         try {
-            PreparedStatement preparedStatement = myConnection
+            preparedStatement = myConnection
                     .prepareStatement("update readers " +
                             "set reader_name=?, reader_address=?, reader_phone=? " +
                             "where reader_id=?");
@@ -180,9 +177,10 @@ public class DBcontroller extends DB {
             throwables.printStackTrace();
         }
     }
-    public boolean checkForID(int id){
+    public boolean checkForID(int id) {
+        PreparedStatement preparedStatement = null;
         try{
-            PreparedStatement preparedStatement = myConnection.prepareStatement("select * from readers where reader_id=?");
+            preparedStatement = myConnection.prepareStatement("select * from readers where reader_id=?");
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             int count = 0;
@@ -200,10 +198,11 @@ public class DBcontroller extends DB {
         return false;
     }
     //
-    public Map<Integer, String> getReaderBookList(int reader_id){
+    public Map<Integer, String> getReaderBookList(int reader_id) {
+        PreparedStatement preparedStatement = null;
         Map<Integer, String> books = new HashMap<>();
         try {
-            PreparedStatement preparedStatement = myConnection.prepareStatement("select reader_booklist.id, reader_booklist.book_id, books.book_name from reader_booklist inner join books on reader_booklist.book_id=books.book_id where reader_booklist.reader_id=?");
+            preparedStatement = myConnection.prepareStatement("select reader_booklist.id, reader_booklist.book_id, books.book_name from reader_booklist inner join books on reader_booklist.book_id=books.book_id where reader_booklist.reader_id=?");
             preparedStatement.setInt(1, reader_id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
@@ -217,9 +216,10 @@ public class DBcontroller extends DB {
         }
         return books;
     }
-    public void addBookToList(int book_id, int reader_id){
+    public void addBookToList(int book_id, int reader_id) {
+        PreparedStatement preparedStatement = null;
         try {
-            PreparedStatement preparedStatement = myConnection.prepareStatement("insert into reader_booklist values(null, ?, ?)");
+            preparedStatement = myConnection.prepareStatement("insert into reader_booklist values(null, ?, ?)");
             preparedStatement.setInt(1, reader_id);
             preparedStatement.setInt(2, book_id);
             preparedStatement.execute();
@@ -233,9 +233,10 @@ public class DBcontroller extends DB {
             throwables.printStackTrace();
         }
     }
-    public void removeBookFromList(int id){
+    public void removeBookFromList(int id) {
+        PreparedStatement preparedStatement = null;
         try{
-            PreparedStatement preparedStatement = myConnection.prepareStatement("select book_id from reader_booklist where id=?");
+            preparedStatement = myConnection.prepareStatement("select book_id from reader_booklist where id=?");
             preparedStatement.setInt(1, id);
             ResultSet rs1 = preparedStatement.executeQuery();
             if(rs1.next()){
@@ -254,10 +255,11 @@ public class DBcontroller extends DB {
             throwables.printStackTrace();
         }
     }
-    public Stack<Book> getAvailableBooks(){
+    public Stack<Book> getAvailableBooks() {
+        PreparedStatement preparedStatement = null;
         Stack<Book> available_books = new Stack<>();
         try {
-            PreparedStatement preparedStatement = myConnection.prepareStatement("select * from books where book_quantity>0");
+            preparedStatement = myConnection.prepareStatement("select * from books where book_quantity>0");
             ResultSet resultSet = preparedStatement.executeQuery();
             int count = 0;
             while(resultSet.next()){
@@ -269,6 +271,25 @@ public class DBcontroller extends DB {
             throwables.printStackTrace();
         }
         return available_books;
+    }
+
+    public ArrayList<Book> getAllBooks() {
+        PreparedStatement preparedStatement = null;
+        ArrayList<Book> all_books = new ArrayList<>();
+        try {
+            preparedStatement = myConnection.prepareStatement("select * from books");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            int count = 0;
+            while(resultSet.next()){
+                //public Book(int book_id, String book_isbn, String book_name, int book_pages, String book_author, String book_url_image, int book_quantity)
+                Book book = new Book(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3), resultSet.getInt(4), resultSet.getString(5),resultSet.getString(6), resultSet.getInt(7));
+                all_books.add(book);
+                count ++;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return all_books;
     }
 
 

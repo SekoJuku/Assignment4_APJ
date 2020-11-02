@@ -102,4 +102,12 @@
             </div>
 
 </body>
+<footer>
+    <br>
+    <h5 class="text-uppercase" style="margin-left: 10px">SE-1906</h5>
+    <p style="margin-left: 10px">Made by Serikzhan Kuanyshev, Dauren Ashim, Akan Otebay</p>
+    <div align="center">© 2020 Astana IT University:
+        <a href="https://astanait.edu.kz/">Astanait.edu.kz</a>
+    </div>
+</footer>
 </html>
